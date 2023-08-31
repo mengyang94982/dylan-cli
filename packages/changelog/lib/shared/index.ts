@@ -1,7 +1,7 @@
-import type {Options} from 'execa';
+import type { Options } from 'execa';
 
 export async function execCommand(cmd: string, args: string[], options?: Options) {
-  const {execa} = await import('execa');
+  const { execa } = await import('execa');
   const res = await execa(cmd, args, options);
   return res?.stdout?.trim() || '';
 }
@@ -12,6 +12,11 @@ export function notNullish<T>(v?: T | null): v is NonNullable<T> {
 
 type PartitionFilter<T> = (i: T, idx: number, arr: readonly T[]) => any;
 
+/**
+ * Divide an array into two parts by a filter function
+ * @category Array
+ * @example const [odd, even] = partition([1, 2, 3, 4], i => i % 2 != 0)
+ */
 export function partition<T>(array: readonly T[], f1: PartitionFilter<T>): [T[], T[]];
 export function partition<T>(array: readonly T[], f1: PartitionFilter<T>, f2: PartitionFilter<T>): [T[], T[], T[]];
 export function partition<T>(
@@ -70,6 +75,9 @@ export function groupBy<T>(items: T[], key: string, groups: Record<string, T[]> 
   return groups;
 }
 
+export function capitalize(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
 
 export function join(array?: string[], glue = ', ', finalGlue = ' and '): string {
   if (!array || array.length === 0) return '';
@@ -79,10 +87,6 @@ export function join(array?: string[], glue = ', ', finalGlue = ' and '): string
   if (array.length === 2) return array.join(finalGlue);
 
   return `${array.slice(0, -1).join(glue)}${finalGlue}${array.slice(-1)}`;
-}
-
-export function capitalize(str: string) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 export function upperFirst(string?: string) {

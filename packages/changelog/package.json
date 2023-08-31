@@ -18,7 +18,7 @@
     "dist"
   ],
   "scripts": {
-    "stub": "unbuild --stub",
+    "stub": "unbuild",
     "lint": "eslint . --fix",
     "format": "dy prettier-write",
     "commit": "dy git-commit",
@@ -27,7 +27,7 @@
     "typecheck": "tsc --noEmit --skipLibCheck",
     "build-pkg": "pnpm -r --filter='./packages/*' run build",
     "build": "pnpm typecheck && unbuild && pnpm build-pkg",
-    "publish-pkg": "pnpm -r publish --access public",
+    "publish-pkg": "pnpm  publish --access public --no-git-checks",
     "release": "dy release && pnpm build && pnpm publish-pkg"
   },
   "dependencies": {

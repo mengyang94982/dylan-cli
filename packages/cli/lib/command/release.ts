@@ -1,4 +1,4 @@
-import versionBump from "bumpp";
+import versionBump from 'bumpp';
 
 export async function release() {
   await versionBump({
@@ -6,7 +6,7 @@ export async function release() {
     execute: 'npx dy changelog',
     all: true,
     tag: true,
-    commit: 'chore(projects)：release v%s',
+    commit: 'chore(projects): release v%s',
     push: true
-  })
+  });
 }
