@@ -18,7 +18,7 @@
     "dist"
   ],
   "scripts": {
-    "stub": "unbuild",
+    "stub": "unbuild --stub",
     "lint": "eslint . --fix",
     "format": "dy prettier-write",
     "commit": "dy git-commit",
@@ -31,6 +31,7 @@
     "release": "dy release && pnpm build && pnpm publish-pkg"
   },
   "dependencies": {
+    "@dylanjs/cli": "workspace:*",
     "cli-progress": "^3.12.0",
     "convert-gitmoji": "0.1.3",
     "ofetch": "^1.3.3"

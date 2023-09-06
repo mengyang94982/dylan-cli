@@ -10,6 +10,7 @@ import {
 } from './git';
 import type { ChangelogOption } from './types';
 
+// 默认配置
 function createDefaultOptions() {
   const cwd = process.cwd();
 
@@ -50,6 +51,7 @@ function createDefaultOptions() {
   return options;
 }
 
+// 获取当前目录的package.json的version字段
 async function getVersionFromPkgJson(cwd: string) {
   let newVersion = '';
 
@@ -70,7 +72,6 @@ export async function createOptions(options?: Partial<ChangelogOption>) {
   Object.assign(opts, options);
 
   const { newVersion } = await getVersionFromPkgJson(opts.cwd);
-
   opts.github.repo ||= await getGitHubRepo();
 
   opts.newVersion ||= `v${newVersion}`;

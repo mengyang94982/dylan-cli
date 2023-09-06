@@ -70,13 +70,14 @@ export async function getChangelogMarkdown(options?: Partial<ChangelogOption>, s
 
 
 export async function generateChangelog(options?: Partial<ChangelogOption>) {
+  //获取默认的配置信息
   const opts = await createOptions(options);
 
   const existContent = await isVersionInMarkdown(opts.to, opts.output);
 
   if (!opts.regenerate && existContent) return;
 
-  const { markdown } = await getChangelogMarkdown(opts);
+  const {markdown} = await getChangelogMarkdown(opts);
 
   await writeMarkdown(markdown, opts.output, opts.regenerate);
 }

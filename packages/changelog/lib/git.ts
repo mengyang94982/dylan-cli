@@ -9,9 +9,7 @@ import type { RawGitCommit, GitCommit, GitCommitAuthor, GithubConfig, Reference,
  */
 export async function getTotalGitTags() {
   const tagStr = await execCommand('git', ['--no-pager', 'tag', '-l', '--sort=creatordate']);
-
   const tags = tagStr.split('\n');
-
   return tags;
 }
 
@@ -63,6 +61,10 @@ export function getFromToTags(tags: string[]) {
   return result;
 }
 
+/**
+ * 获取到某一位的tag
+ * @param delta 0的话是最后一位
+ */
 export async function getLastGitTag(delta = 0) {
   const tags = await getTotalGitTags();
 
@@ -83,11 +85,14 @@ export async function getCurrentGitBranch() {
 }
 
 export async function getGitHubRepo() {
+  // https://github.com/mengyang94982/dylan-cli.git 获取到github的仓库地址
   const url = await execCommand('git', ['config', '--get', 'remote.origin.url']);
   const match = url.match(/github\.com[/:]([\w\d._-]+?)\/([\w\d._-]+?)(\.git)?$/i);
   if (!match) {
+    // 没找到仓库地址抛出错误
     throw new Error(`Can not parse GitHub repo from url ${url}`);
   }
+  // mengyang94982/dylan-cli
   return `${match[1]}/${match[2]}`;
 }
 

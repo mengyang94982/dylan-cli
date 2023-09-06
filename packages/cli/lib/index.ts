@@ -98,7 +98,6 @@ export async function setupCli() {
     'changelog': {
       desc: "生成changelog",
       action: async (args) => {
-
         await genChangelog(cliOptions.changelogOptions, args?.total)
       }
     },

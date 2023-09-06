@@ -1,22 +1,16 @@
 {
-  "name": "@dylanjs/cli",
-  "version": "0.0.4",
-  "description": "DylanJS's command line tools",
+  "name": "@dylanjs/utils",
+  "version": "0.0.1",
+  "description": "项目中常用的工具方法的工具库",
   "author": "Dylan <my466879168@gmail.com> (https://github.com/mengyang94982/)",
   "license": "MIT",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.cjs"
     }
-  },
-  "bin": {
-    "dylan": "dist/index.cjs",
-    "dy": "dist/index.cjs"
   },
   "files": [
     "dist"
@@ -34,14 +28,7 @@
     "publish-pkg": "pnpm publish --access public --no-git-checks",
     "release": "dy release && pnpm build && pnpm publish-pkg"
   },
-  "keywords": [],
   "dependencies": {
-    "@dylanjs/cli": "link:",
-    "@dylanjs/changelog": "workspace:*",
-    "c12": "^1.4.2",
-    "cac": "^6.7.14",
-    "lint-staged": "^14.0.1",
-    "npm-check-updates": "^16.13.2",
-    "rimraf": "^5.0.1"
+    "@dylanjs/cli": "workspace:*"
   }
 }
