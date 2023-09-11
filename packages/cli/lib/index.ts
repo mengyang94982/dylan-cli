@@ -5,7 +5,7 @@ import {version} from '../package.json'
 
 import {loadCliOptions} from './config'
 
-import {gitCommit,initSimpleGitHooks, gitCommitVerify,execLintStaged,cleanup} from "./command"
+import {gitCommit,initSimpleGitHooks, gitCommitVerify,execLintStaged,cleanup,prettierWrite} from "./command"
 
 type Command =
   | 'git-commit'
@@ -13,6 +13,7 @@ type Command =
   | 'git-commit-verify'
   | 'lint-staged'
   | 'cleanup'
+  | 'prettier-write'
 
 type CommandAction<A extends object> = (args?: A) => Promise<void> | void
 
@@ -61,6 +62,12 @@ export async function setupCli() {
       desc:'清空依赖项和构建文件',
       action:async ()=>{
         await cleanup(cliOptions.cleanupDirs)
+      }
+    },
+    'prettier-write':{
+      desc:"执行 prettier --write 格式化",
+      action:async ()=>{
+        await prettierWrite(cliOptions.prettierWriteGlob)
       }
     }
   }

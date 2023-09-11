@@ -1,6 +1,6 @@
 {
   "name": "@dylanjs/cli",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "DylanJS's command line tools",
   "author": "Dylan <my466879168@gmail.com> (https://github.com/mengyang94982/)",
   "license": "MIT",
