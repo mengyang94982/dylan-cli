@@ -1,6 +1,6 @@
 {
   "name": "@dylanjs/changelog",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "generate changelog form git tags and commits for github",
   "author": "Dylan <my466879168@gmail.com> (https://github.com/mengyang94982/)",
   "license": "MIT",
@@ -8,7 +8,7 @@
     ".": {
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs",
-      "types": "./dist/index.d.mjs"
+      "types": "./dist/index.d.ts"
     }
   },
   "main": "./dist/index.cjs",
@@ -19,6 +19,8 @@
   ],
   "scripts": {
     "stub": "unbuild --stub",
+    "dev":"unbuild",
+    "test":"pnpm publish --no-git-checks",
     "lint": "eslint . --fix",
     "format": "dy prettier-write",
     "commit": "dy git-commit",
