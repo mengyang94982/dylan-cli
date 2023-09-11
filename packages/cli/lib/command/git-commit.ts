@@ -1,7 +1,7 @@
 import enquirer from 'enquirer'
 
-import type {CliOption} from '../types';
-import {execCommand} from "../shared";
+import type {CliOption} from "../types";
+import {execCommand} from '../shared'
 
 interface PromptObject {
   types: string
@@ -21,12 +21,10 @@ export async function gitCommit(
       message
     }
   })
-
   const scopesChoices = gitCommitScopes.map(([name, title]) => ({
     name,
     message: `${name.padEnd(30)} (${title})`
   }))
-
   const result = await enquirer.prompt<PromptObject>([
     {
       name: 'types',
@@ -47,6 +45,5 @@ export async function gitCommit(
     }
   ])
   const commitMsg = `${result.types}(${result.scopes})：${result.description}`
-
-  execCommand('git', ['commit', '-m', commitMsg], {stdio: 'inherit'})
+  await execCommand('git', ['commit', '-m', commitMsg], {stdio: 'inherit'})
 }

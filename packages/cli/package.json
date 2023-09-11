@@ -1,6 +1,6 @@
 {
   "name": "@dylanjs/cli",
-  "version": "0.0.4",
+  "version": "0.0.7",
   "description": "DylanJS's command line tools",
   "author": "Dylan <my466879168@gmail.com> (https://github.com/mengyang94982/)",
   "license": "MIT",
@@ -23,25 +23,16 @@
   ],
   "scripts": {
     "stub": "unbuild --stub",
-    "lint": "eslint . --fix",
-    "format": "dy prettier-write",
-    "commit": "dy git-commit",
-    "cleanup": "dy cleanup",
-    "ncu": "dy ncu",
+    "ubnuild": "unbuild",
+    "pub": "pnpm publish --no-git-checks",
     "typecheck": "tsc --noEmit --skipLibCheck",
-    "build-pkg": "pnpm -r --filter='./packages/*' run build",
-    "build": "pnpm typecheck && unbuild && pnpm build-pkg",
-    "publish-pkg": "pnpm publish --access public --no-git-checks",
-    "release": "dy release && pnpm build && pnpm publish-pkg"
+    "commit": "dy git-commit",
+    "build": "pnpm typecheck && unbuild"
   },
-  "keywords": [],
   "dependencies": {
     "@dylanjs/cli": "link:",
-    "@dylanjs/changelog": "workspace:*",
     "c12": "^1.4.2",
     "cac": "^6.7.14",
-    "lint-staged": "^14.0.1",
-    "npm-check-updates": "^16.13.2",
-    "rimraf": "^5.0.1"
+    "enquirer": "^2.4.1"
   }
 }

@@ -5,7 +5,6 @@ import {readFile} from 'fs/promises'
 
 const eslintExt = '*.{js,jsx,mjs,cjs,json,ts,tsx,mts,cts,vue,svelte,astro}'
 
-
 const defaultOptions: CliOption = {
   cwd: process.cwd(),
   // 执行清空依赖项命令后需要删除的文件夹
@@ -70,10 +69,7 @@ const defaultOptions: CliOption = {
     [eslintExt]: 'eslint --fix',
     '*': 'soy prettier-write'
   },
-  // changelog参数
-  changelogOptions:{}
 }
-
 
 export async function loadCliOptions(overrides?: Partial<CliOption>, cwd = process.cwd()) {
   const {config} = await loadConfig<Partial<CliOption>>({

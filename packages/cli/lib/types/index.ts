@@ -1,5 +1,3 @@
-import type {ChangelogOption} from '@dylanjs/changelog'
-
 export interface CliOption {
   /**
    * the project root directory
@@ -36,9 +34,4 @@ export interface CliOption {
    * lint-staged config
    */
   lintStagedConfig: Record<string, string | string[]>
-  /**
-   * options of generate changelog
-   * @link https://github.com/soybeanjs/changelog
-   */
-  changelogOptions: Partial<ChangelogOption>
 }
