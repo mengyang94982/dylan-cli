@@ -5,13 +5,14 @@ import {version} from '../package.json'
 
 import {loadCliOptions} from './config'
 
-import {gitCommit,initSimpleGitHooks, gitCommitVerify,execLintStaged} from "./command"
+import {gitCommit,initSimpleGitHooks, gitCommitVerify,execLintStaged,cleanup} from "./command"
 
 type Command =
   | 'git-commit'
   | 'init-simple-git-hooks'
   | 'git-commit-verify'
   | 'lint-staged'
+  | 'cleanup'
 
 type CommandAction<A extends object> = (args?: A) => Promise<void> | void
 
@@ -54,6 +55,12 @@ export async function setupCli() {
           process.exitCode = 1
         })
         process.exitCode = passed ? 0 : 1
+      }
+    },
+    cleanup:{
+      desc:'清空依赖项和构建文件',
+      action:async ()=>{
+        await cleanup(cliOptions.cleanupDirs)
       }
     }
   }

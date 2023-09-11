@@ -67,7 +67,7 @@ const defaultOptions: CliOption = {
   // lint-staged 参数配置
   lintStagedConfig: {
     [eslintExt]: 'eslint --fix',
-    '*': 'soy prettier-write'
+    '*': 'dy prettier-write'
   },
 }
 
