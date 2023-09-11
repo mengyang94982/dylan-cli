@@ -9,9 +9,7 @@
     "bumpp": "^9.2.0",
     "crypto-js": "^4.1.1",
     "dayjs": "^1.11.9",
-
-    "execa": "^8.0.1",
-    "kolorist": "^1.8.0"
+    "execa": "^8.0.1"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.1.1",

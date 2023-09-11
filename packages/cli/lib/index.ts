@@ -5,12 +5,12 @@ import {version} from '../package.json'
 
 import {loadCliOptions} from './config'
 
-import {
-  gitCommit,
-} from "./command"
+import {gitCommit,initSimpleGitHooks, gitCommitVerify} from "./command"
 
 type Command =
   | 'git-commit'
+  | 'init-simple-git-hooks'
+  | 'git-commit-verify'
 
 type CommandAction<A extends object> = (args?: A) => Promise<void> | void
 
@@ -33,11 +33,23 @@ export async function setupCli() {
       action: async () => {
         await gitCommit(cliOptions.gitCommitTypes, cliOptions.gitCommitScopes)
       }
+    },
+    'init-simple-git-hooks':{
+      desc: '初始化 simple-git-hooks 钩子',
+      action:async ()=>{
+        await initSimpleGitHooks(cliOptions.cwd)
+      }
+    },
+    'git-commit-verify': {
+      desc: '校验 git 提交信息是否符合 Conventional Commits 规范',
+      action: async () => {
+        await gitCommitVerify()
+      }
     }
   }
 
-  for await (const [command,{desc,action}] of Object.entries(commands)){
-    cli.command(command,desc).action(action)
+  for await (const [command, {desc, action}] of Object.entries(commands)) {
+    cli.command(command, desc).action(action)
   }
 
   cli.parse()

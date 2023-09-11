@@ -1,6 +1,6 @@
 {
   "name": "@dylanjs/cli",
-  "version": "0.0.7",
+  "version": "0.0.9",
   "description": "DylanJS's command line tools",
   "author": "Dylan <my466879168@gmail.com> (https://github.com/mengyang94982/)",
   "license": "MIT",
@@ -33,6 +33,8 @@
     "@dylanjs/cli": "link:",
     "c12": "^1.4.2",
     "cac": "^6.7.14",
-    "enquirer": "^2.4.1"
+    "enquirer": "^2.4.1",
+    "kolorist": "^1.8.0",
+    "rimraf": "^5.0.1"
   }
 }
