@@ -5,12 +5,13 @@ import {version} from '../package.json'
 
 import {loadCliOptions} from './config'
 
-import {gitCommit,initSimpleGitHooks, gitCommitVerify} from "./command"
+import {gitCommit,initSimpleGitHooks, gitCommitVerify,execLintStaged} from "./command"
 
 type Command =
   | 'git-commit'
   | 'init-simple-git-hooks'
   | 'git-commit-verify'
+  | 'lint-staged'
 
 type CommandAction<A extends object> = (args?: A) => Promise<void> | void
 
@@ -44,6 +45,15 @@ export async function setupCli() {
       desc: '校验 git 提交信息是否符合 Conventional Commits 规范',
       action: async () => {
         await gitCommitVerify()
+      }
+    },
+    'lint-staged':{
+      desc:'执行lint-staged',
+      action:async ()=>{
+        const passed = await execLintStaged(cliOptions.lintStagedConfig).catch(() => {
+          process.exitCode = 1
+        })
+        process.exitCode = passed ? 0 : 1
       }
     }
   }
