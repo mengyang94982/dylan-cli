@@ -30,12 +30,13 @@
     "build": "pnpm typecheck && unbuild"
   },
   "dependencies": {
+    "@dylanjs/changelog": "workspace:*",
     "@dylanjs/cli": "link:",
     "c12": "^1.4.2",
     "cac": "^6.7.14",
     "enquirer": "^2.4.1",
     "kolorist": "^1.8.0",
-    "rimraf": "^5.0.1",
-    "lint-staged": "^14.0.1"
+    "lint-staged": "^14.0.1",
+    "rimraf": "^5.0.1"
   }
 }

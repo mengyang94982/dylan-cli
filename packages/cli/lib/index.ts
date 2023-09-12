@@ -5,7 +5,7 @@ import {version} from '../package.json'
 
 import {loadCliOptions} from './config'
 
-import {gitCommit,initSimpleGitHooks, gitCommitVerify,execLintStaged,cleanup,prettierWrite} from "./command"
+import {gitCommit,initSimpleGitHooks, gitCommitVerify,execLintStaged,cleanup,prettierWrite,genChangelog,release} from "./command"
 
 type Command =
   | 'git-commit'
@@ -14,6 +14,8 @@ type Command =
   | 'lint-staged'
   | 'cleanup'
   | 'prettier-write'
+  | 'changelog'
+  | 'release'
 
 type CommandAction<A extends object> = (args?: A) => Promise<void> | void
 
@@ -69,7 +71,19 @@ export async function setupCli() {
       action:async ()=>{
         await prettierWrite(cliOptions.prettierWriteGlob)
       }
-    }
+    },
+    changelog:{
+      desc:"生成changelog",
+      action:async args=>{
+        await genChangelog(cliOptions.changelogOptions, args?.total)
+      }
+    },
+    release: {
+      desc: '发布：更新版本号、生成changelog、提交代码',
+      action: async () => {
+        await release();
+      }
+    },
   }
 
   for await (const [command, {desc, action}] of Object.entries(commands)) {

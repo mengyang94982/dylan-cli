@@ -1,0 +1,42 @@
+{
+  "name": "@dylanjs/changelog",
+  "version": "0.0.2",
+  "author": "Dylan <my466879168@gmail.com> (https://github.com/mengyang94982/)",
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "stub": "unbuild --stub",
+    "dev": "unbuild",
+    "test": "pnpm publish --no-git-checks",
+    "lint": "eslint . --fix",
+    "format": "dy prettier-write",
+    "commit": "dy git-commit",
+    "cleanup": "dy cleanup",
+    "ncu": "dy ncu",
+    "typecheck": "tsc --noEmit --skipLibCheck",
+    "build-pkg": "pnpm -r --filter='./packages/*' run build",
+    "build": "pnpm typecheck && unbuild && pnpm build-pkg",
+    "publish-pkg": "pnpm  publish --access public --no-git-checks",
+    "release": "dy release && pnpm build && pnpm publish-pkg"
+  },
+  "dependencies": {
+    "cli-progress": "^3.12.0",
+    "dayjs": "^1.11.9",
+    "execa": "^8.0.1"
+  },
+  "devDependencies": {
+    "@types/cli-progress": "^3.11.2"
+  }
+}

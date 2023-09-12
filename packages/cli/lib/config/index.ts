@@ -69,6 +69,7 @@ const defaultOptions: CliOption = {
     [eslintExt]: 'eslint --fix',
     '*': 'dy prettier-write'
   },
+  changelogOptions: {},
 }
 
 export async function loadCliOptions(overrides?: Partial<CliOption>, cwd = process.cwd()) {
