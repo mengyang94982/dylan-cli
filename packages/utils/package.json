@@ -1,11 +1,12 @@
 {
   "name": "@dylanjs/utils",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "项目中常用的工具方法的工具库",
   "author": "Dylan <my466879168@gmail.com> (https://github.com/mengyang94982/)",
   "license": "MIT",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
@@ -18,6 +19,8 @@
   ],
   "scripts": {
     "stub": "unbuild --stub",
+    "test": "unbuild",
+    "pub": "pnpm publish --no-git-checks",
     "lint": "eslint . --fix",
     "format": "dy prettier-write",
     "commit": "dy git-commit",

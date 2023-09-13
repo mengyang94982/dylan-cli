@@ -5,7 +5,7 @@ export interface ChangelogOption{
    */
   cwd:string
   /**
-   * the commit scope types
+   * the commit scope partition
    */
   types:Record<string,string>
   /**

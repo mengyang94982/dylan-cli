@@ -1,6 +1,6 @@
 {
   "name": "@dylanjs/changelog",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "Dylan <my466879168@gmail.com> (https://github.com/mengyang94982/)",
   "license": "MIT",
   "exports": {
@@ -32,9 +32,12 @@
     "release": "dy release && pnpm build && pnpm publish-pkg"
   },
   "dependencies": {
+    "@dylanjs/utils": "workspace:*",
     "cli-progress": "^3.12.0",
+    "convert-gitmoji": "^0.1.3",
     "dayjs": "^1.11.9",
-    "execa": "^8.0.1"
+    "execa": "^8.0.1",
+    "ofetch": "^1.3.3"
   },
   "devDependencies": {
     "@types/cli-progress": "^3.11.2"

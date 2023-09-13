@@ -5,3 +5,4 @@ export * from "./lint-staged";
 export * from "./cleanup";
 export * from "./prettier-white";
 export * from "./gen-changelog";
+export * from './release'

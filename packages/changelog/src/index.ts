@@ -1,22 +1,33 @@
-import { ChangelogOption } from "../lib/types";
+import { ChangelogOption } from "../lib/types"
 
-import { createOptions } from "../lib/config";
+import { createOptions } from "../lib/config"
 
-import { isVersionInMarkdown,getChangelogMarkdown } from "../lib/markdown";
+import {
+  isVersionInMarkdown,
+  getChangelogMarkdown,
+  writeMarkdown,
+  getTotalChangelogMarkdown,
+} from "../lib/markdown"
 
 export async function generateChangelog(options?: Partial<ChangelogOption>) {
   //获取默认的配置信息
-  const opts = await createOptions(options);
-  const existContent = await isVersionInMarkdown(opts.to, opts.output);
+  const opts = await createOptions(options)
+  const existContent = await isVersionInMarkdown(opts.to, opts.output)
 
-  if (!opts.regenerate && existContent) return;
+  if (!opts.regenerate && existContent) return
 
-  const { markdown } = await getChangelogMarkdown(opts);
+  const { markdown } = await getChangelogMarkdown(opts)
+  await writeMarkdown(markdown, opts.output, opts.regenerate)
 }
 
 export async function generateTotalChangelog(
   options?: Partial<ChangelogOption>,
   showProgress = true
-) {}
+) {
+  debugger
+  const opts = await createOptions(options)
+  const markdown = await getTotalChangelogMarkdown(opts, showProgress)
+  await writeMarkdown(markdown, opts.output, true)
+}
 
-export type { ChangelogOption };
+export type { ChangelogOption }

@@ -1,7 +1,11 @@
-import { execCommand } from "../shared";
+import {execCommand} from "../shared";
 import dayjs from "dayjs";
-import { VERSION_REG } from "../constant";
-import type { RawGitCommit } from "../types";
+import {CoAuthoredByRegex, ConventionalCommitRegex, IssueRE, PullRequestRE, VERSION_REG} from "../constant";
+import type {GitCommit, GitCommitAuthor, GithubConfig, RawGitCommit, Reference, ResolvedAuthor} from "../types";
+
+import {notNullish} from "@dylanjs/utils";
+
+import {ofetch} from 'ofetch';
 
 /**
  * 获取仓库url地址
@@ -122,9 +126,9 @@ export function isPrerelease(version: string) {
 /**
  * 将所有的tag格式化成
  * { from: '0.0.1', to: '0.0.2' },
-  { from: '0.0.2', to: '0.0.3' },
-  { from: '0.0.3', to: '0.0.4' },
-  { from: '0.0.4', to: '0.0.5' }
+ { from: '0.0.2', to: '0.0.3' },
+ { from: '0.0.3', to: '0.0.4' },
+ { from: '0.0.4', to: '0.0.5' }
  * @param tags 所有的tag
  * @returns { from: '0.0.1', to: '0.0.2' }...
  */
@@ -132,21 +136,23 @@ export function getFromToTags(tags: string[]) {
   const result: { from: string; to: string }[] = [];
   tags.forEach((tag, index) => {
     if (index < tags.length - 1) {
-      result.push({ from: tag, to: tags[index + 1] });
+      result.push({from: tag, to: tags[index + 1]});
     }
   });
   return result;
 }
 
 export async function getGitCommits(from?: string, to = "HEAD") {
-  const rwaGitCommits = await getGitDiff(from, to);
+  const rawGitCommits = await getGitDiff(from, to);
+  const commits = rawGitCommits.map(commit => parseGitCommit(commit)).filter(notNullish)
+  return commits
 }
 
 /**
- * 
- * @param from 
- * @param to 
- * @returns 
+ * 获取最新的提交日志
+ * @param from 日志开始的范围
+ * @param to 日志结束的范围
+ * @returns 最新的提交日志
  */
 async function getGitDiff(from?: string, to = "HEAD"): Promise<RawGitCommit[]> {
   // https://git-scm.com/docs/pretty-formats
@@ -159,17 +165,188 @@ async function getGitDiff(from?: string, to = "HEAD"): Promise<RawGitCommit[]> {
     "--name-status",
   ]);
   const rawGitLines = rawGit.split("----\n").splice(1);
-  const gitCommits = rawGitLines.map((line) => {
+  return rawGitLines.map((line) => {
     const [firstLine, ...body] = line.split("\n");
     const [message, shortHash, authorName, authorEmail] = firstLine.split("|");
     const gitCommit: RawGitCommit = {
       message,
       shortHash,
-      author: { name: authorName, email: authorEmail },
+      author: {name: authorName, email: authorEmail},
       body: body.join("\n"),
     };
     return gitCommit;
   });
-  console.log("🚀 ~ file: index.ts:171 ~ gitCommits ~ gitCommits:", gitCommits)
-  return gitCommits;
+}
+
+function parseGitCommit(commit: RawGitCommit): GitCommit | null {
+  // https://www.conventionalcommits.org/en/v1.0.0/
+  // https://regex101.com/r/FSfNvA/1
+
+
+  const match = commit.message.match(ConventionalCommitRegex)
+  if (!match?.groups) {
+    return null
+  }
+  const type = match.groups.type;
+  const scope = match.groups.scope || '';
+  const isBreaking = Boolean(match.groups.breaking);
+  let description = match.groups.description;
+
+  const references: Reference[] = [];
+  for (const m of description.matchAll(PullRequestRE)) {
+    references.push({type: 'pull-request', value: m[1]});
+  }
+  for (const m of description.matchAll(IssueRE)) {
+    if (!references.some(i => i.value === m[1])) {
+      references.push({type: 'issue', value: m[1]});
+    }
+  }
+  references.push({value: commit.shortHash, type: 'hash'});
+  // Remove references and normalize
+  description = description.replace(PullRequestRE, '').trim();
+  // Find all authors
+  const authors: GitCommitAuthor[] = [commit.author];
+  const matches = commit.body.matchAll(CoAuthoredByRegex);
+
+  for (const $match of matches) {
+    const {name = '', email = ''} = $match.groups || {};
+
+    const author: GitCommitAuthor = {
+      name: name.trim(),
+      email: email.trim()
+    };
+
+    authors.push(author);
+  }
+
+  return {
+    ...commit,
+    authors,
+    resolvedAuthors: [],
+    description,
+    type,
+    scope,
+    references,
+    isBreaking
+  };
+}
+
+export async function getGitCommitsAndResolvedAuthors(
+  commits: GitCommit[],
+  github: GithubConfig,
+  resolvedLogins?: Map<string, string>
+) {
+  const resultCommits: GitCommit[] = [];
+  const map = new Map<string, ResolvedAuthor>();
+  for await (const commit of commits) {
+    const resolvedAuthors: ResolvedAuthor[] = [];
+
+    for await (const [index, author] of commit.authors.entries()) {
+      const {email, name} = author;
+
+      if (email && name) {
+        const commitHashes: string[] = [];
+
+        if (index === 0) {
+          commitHashes.push(commit.shortHash);
+        }
+
+        const resolvedAuthor: ResolvedAuthor = {
+          name,
+          email,
+          commits: commitHashes,
+          login: ''
+        };
+
+        if (!resolvedLogins?.has(email)) {
+          const login = await getResolvedAuthorLogin(github, commitHashes, email);
+          resolvedAuthor.login = login;
+
+          resolvedLogins?.set(email, login);
+        } else {
+          const login = resolvedLogins?.get(email) || '';
+          resolvedAuthor.login = login;
+        }
+
+        resolvedAuthors.push(resolvedAuthor);
+
+        if (!map.has(email)) {
+          map.set(email, resolvedAuthor);
+        }
+      }
+    }
+
+    const resultCommit = {...commit, resolvedAuthors};
+
+    resultCommits.push(resultCommit);
+  }
+  return {
+    commits: resultCommits,
+    contributors: Array.from(map.values())
+  };
+}
+
+async function getResolvedAuthorLogin(github: GithubConfig, commitHashes: string[], email: string) {
+  let login = '';
+
+  try {
+    const data = await ofetch(`https://ungh.cc/users/find/${email}`);
+    login = data?.user?.username || '';
+  } catch (e) {
+    console.log('e: ', e);
+  }
+
+  if (login) {
+    return login;
+  }
+
+  const {repo, token} = github;
+
+  // token not provided, skip github resolving
+  if (!token) {
+    return login;
+  }
+
+  if (commitHashes.length) {
+    try {
+      const data = await ofetch(`https://api.github.com/repos/${repo}/commits/${commitHashes[0]}`, {
+        headers: getHeaders(token)
+      });
+      login = data?.author?.login || '';
+    } catch (e) {
+      console.log('e: ', e);
+    }
+  }
+
+  if (login) {
+    return login;
+  }
+
+  try {
+    const data = await ofetch(`https://api.github.com/search/users?q=${encodeURIComponent(email)}`, {
+      headers: getHeaders(token)
+    });
+    login = data.items[0].login;
+  } catch (e) {
+    console.log('e: ', e);
+  }
+
+  return login;
+}
+
+function getHeaders(githubToken: string) {
+  return {
+    accept: 'application/vnd.github.v3+json',
+    authorization: `token ${githubToken}`
+  };
+}
+
+export function getUserGithub(userName: string) {
+  return `https://github.com/${userName}`;
+}
+
+export function getGitUserAvatar(userName: string) {
+  const githubUrl = getUserGithub(userName);
+
+  return `${githubUrl}.png?size=48`;
 }

@@ -30,7 +30,7 @@ export async function setupCli() {
   const cli = cac('dylan')
   cli
     .version(version)
-    .option('--total', 'Generate changelog by total tags')
+    .option('--total', '把所有的tags生成changelog，通常第一次使用')
     .help()
   const commands: CommandWithAction<CommandArg> = {
     'git-commit': {

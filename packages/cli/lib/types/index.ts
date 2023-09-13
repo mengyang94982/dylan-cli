@@ -15,7 +15,7 @@ export interface CliOption {
    */
   cleanupDirs: string[]
   /**
-   * git commit types
+   * git commit partition
    */
   gitCommitTypes: [string, string][]
   /**
