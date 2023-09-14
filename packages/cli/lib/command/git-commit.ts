@@ -44,6 +44,6 @@ export async function gitCommit(
       message: '请输入提交描述',
     }
   ])
-  const commitMsg = `${result.types}(${result.scopes})：${result.description}`
+  const commitMsg = `${result.types}(${result.scopes}): ${result.description}`
   await execCommand('git', ['commit', '-m', commitMsg], {stdio: 'inherit'})
 }

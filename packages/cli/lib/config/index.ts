@@ -1,7 +1,7 @@
-import {CliOption} from "../types";
+import {readFile} from 'node:fs/promises'
 import {loadConfig} from "c12";
+import type {CliOption} from "../types";
 
-import {readFile} from 'fs/promises'
 
 const eslintExt = '*.{js,jsx,mjs,cjs,json,ts,tsx,mts,cts,vue,svelte,astro}'
 
@@ -46,7 +46,7 @@ const defaultOptions: CliOption = {
     ['other', '其他修改']
   ],
   // 调用 npm-check-updates 包的参数
-  ncuCommandArgs: ['--deep', '-u'],
+  tazeCommandArgs: [],
   prettierWriteGlob: [
     `!**/${eslintExt}`,
     '!*.min.*',

@@ -5,7 +5,7 @@ import {version} from '../package.json'
 
 import {loadCliOptions} from './config'
 
-import {gitCommit,initSimpleGitHooks, gitCommitVerify,execLintStaged,cleanup,prettierWrite,genChangelog,release} from "./command"
+import {cleanup,execLintStaged, genChangelog,gitCommit,gitCommitVerify,initSimpleGitHooks,prettierWrite,release,taze} from "./command"
 
 type Command =
   | 'git-commit'
@@ -14,6 +14,7 @@ type Command =
   | 'lint-staged'
   | 'cleanup'
   | 'prettier-write'
+  | 'taze'
   | 'changelog'
   | 'release'
 
@@ -72,6 +73,12 @@ export async function setupCli() {
         await prettierWrite(cliOptions.prettierWriteGlob)
       }
     },
+    taze:{
+      desc:"taze命令, 用来升级依赖",
+      action:async () => {
+        return await taze()
+      }
+    },
     changelog:{
       desc:"生成changelog",
       action:async args=>{
@@ -87,7 +94,7 @@ export async function setupCli() {
   }
 
   for await (const [command, {desc, action}] of Object.entries(commands)) {
-    cli.command(command, desc).action(action)
+    cli.command(command, desc).action(action).allowUnknownOptions()
   }
 
   cli.parse()

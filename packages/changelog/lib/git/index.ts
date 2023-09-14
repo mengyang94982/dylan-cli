@@ -1,11 +1,11 @@
-import {execCommand} from "../shared";
 import dayjs from "dayjs";
+import {notNullish} from "@dylanjs/utils";
+import {ofetch} from 'ofetch';
+import {execCommand} from "../shared";
 import {CoAuthoredByRegex, ConventionalCommitRegex, IssueRE, PullRequestRE, VERSION_REG} from "../constant";
 import type {GitCommit, GitCommitAuthor, GithubConfig, RawGitCommit, Reference, ResolvedAuthor} from "../types";
 
-import {notNullish} from "@dylanjs/utils";
 
-import {ofetch} from 'ofetch';
 
 /**
  * 获取仓库url地址
@@ -289,12 +289,12 @@ export async function getGitCommitsAndResolvedAuthors(
 async function getResolvedAuthorLogin(github: GithubConfig, commitHashes: string[], email: string) {
   let login = '';
 
-  try {
+  // try {
     const data = await ofetch(`https://ungh.cc/users/find/${email}`);
     login = data?.user?.username || '';
-  } catch (e) {
-    console.log('e: ', e);
-  }
+  // } catch () {
+    
+  // }
 
   if (login) {
     return login;
@@ -308,28 +308,28 @@ async function getResolvedAuthorLogin(github: GithubConfig, commitHashes: string
   }
 
   if (commitHashes.length) {
-    try {
+    // try {
       const data = await ofetch(`https://api.github.com/repos/${repo}/commits/${commitHashes[0]}`, {
         headers: getHeaders(token)
       });
       login = data?.author?.login || '';
-    } catch (e) {
-      console.log('e: ', e);
-    }
+    // } catch () {
+      
+    // }
   }
 
   if (login) {
     return login;
   }
 
-  try {
-    const data = await ofetch(`https://api.github.com/search/users?q=${encodeURIComponent(email)}`, {
+  // try {
+    const emailData = await ofetch(`https://api.github.com/search/users?q=${encodeURIComponent(email)}`, {
       headers: getHeaders(token)
     });
-    login = data.items[0].login;
-  } catch (e) {
-    console.log('e: ', e);
-  }
+    login = emailData.items[0].login;
+  // } catch () {
+    
+  // }
 
   return login;
 }

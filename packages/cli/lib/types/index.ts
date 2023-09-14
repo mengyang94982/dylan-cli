@@ -26,7 +26,7 @@ export interface CliOption {
    * npm-check-updates command args
    * @default ["--deep","-u"]
    */
-  ncuCommandArgs: string[]
+  tazeCommandArgs: string[]
   /**
    * prettier write glob
    * @description glob pattern syntax {@link https://github.com/micromatch/micromatch}
@@ -38,7 +38,7 @@ export interface CliOption {
   lintStagedConfig: Record<string, string | string[]>
   /**
    * options of generate changelog
-   * @link https://github.com/soybeanjs/changelog
+   * @link https://github.com/mengyang94982/dylan-cli
    */
   changelogOptions: Partial<ChangelogOption>;
 }

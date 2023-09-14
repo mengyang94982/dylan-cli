@@ -8,11 +8,14 @@ export function groupBy<T>(items: T[], key: string, groups: Record<string, T[]> 
 }
 
 export function join(array?: string[], glue = ', ', finalGlue = ' and '): string {
-  if (!array || array.length === 0) return '';
+  if (!array || array.length === 0) 
+return '';
 
-  if (array.length === 1) return array[0];
+  if (array.length === 1) 
+return array[0];
 
-  if (array.length === 2) return array.join(finalGlue);
+  if (array.length === 2) 
+return array.join(finalGlue);
 
   return `${array.slice(0, -1).join(glue)}${finalGlue}${array.slice(-1)}`;
 }

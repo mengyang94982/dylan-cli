@@ -17,12 +17,7 @@
     "forceConsistentCasingInFileNames": true,
     "types": [
       "node"
-    ],
-    "paths": {
-      "@/*": [
-        "./lib/*"
-      ]
-    }
+    ]
   },
   "include": [
     "bin/**/*",

@@ -1,5 +1,5 @@
 const pattern =
-  /[a-zA-Z0-9_\u0392-\u03c9\u00c0-\u00ff\u0600-\u06ff\u0400-\u04ff]+|[\u4e00-\u9fff\u3400-\u4dbf\uf900-\ufaff\u3040-\u309f\uac00-\ud7af]+/g
+  /[a-zA-Z0-9_\u0392-\u03C9\u00C0-\u00FF\u0600-\u06FF\u0400-\u04FF]+|[\u4E00-\u9FFF\u3400-\u4DBF\uF900-\uFAFF\u3040-\u309F\uAC00-\uD7AF]+/g
 
 // copy from https://github.com/youngjuning/vscode-juejin-wordcount/blob/main/count-word.ts
 export function countWord(data: string) {
@@ -20,7 +20,7 @@ export function countWord(data: string) {
 
 export function chineseSearchOptimize(input: string) {
   return input
-    .replace(/[\u4e00-\u9fa5]/g, ' $& ')
+    .replace(/[\u4E00-\u9FA5]/g, ' $& ')
     .replace(/\s+/g, ' ')
     .trim()
 }

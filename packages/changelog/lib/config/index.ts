@@ -1,12 +1,12 @@
-import { ChangelogOption } from "../types";
+import type { ChangelogOption } from "../types";
 import { getVersionFromPkgJson } from "../version";
 import {
-  getGitHubRepo,
-  getLastGitTag,
   getCurrentGitBranch,
   getFirstGitCommit,
-  getTotalGitTags,
+  getGitHubRepo,
+  getLastGitTag,
   getTagDateMap,
+  getTotalGitTags,
   isPrerelease,
 } from "../git";
 

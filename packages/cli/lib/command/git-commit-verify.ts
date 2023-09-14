@@ -1,5 +1,5 @@
-import path from 'path'
-import {readFileSync} from 'fs'
+import path from 'node:path'
+import {readFileSync} from 'node:fs'
 import {bgRed, green, red} from "kolorist";
 import {execCommand} from "../shared";
 

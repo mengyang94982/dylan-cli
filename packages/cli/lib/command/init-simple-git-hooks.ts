@@ -1,8 +1,8 @@
-import path from 'path'
-import {existsSync} from 'fs'
-import {execCommand} from "../shared";
+import path from 'node:path'
+import {existsSync} from 'node:fs'
+import * as process from "node:process";
 import {rimraf} from "rimraf";
-import * as process from "process";
+import {execCommand} from "../shared";
 
 export async function initSimpleGitHooks(cwd = process.cwd()) {
   // 获取.husky文件夹路径

@@ -1,21 +1,21 @@
-import {existsSync} from 'fs';
+import {existsSync} from 'node:fs';
 
-import {readFile, writeFile} from "fs/promises";
-import {VERSION_REG, VERSION_REG_OF_MARKDOWN, VERSION_WITH_RELEASE} from "../constant";
-import {ChangelogOption, GitCommit, Reference, ResolvedAuthor} from "../types";
-import {createOptions} from "../config";
+import {readFile, writeFile} from "node:fs/promises";
 import {Presets, SingleBar} from "cli-progress";
-import {getFromToTags, getGitCommits, getGitCommitsAndResolvedAuthors, getGitUserAvatar, getUserGithub} from '../git'
 import dayjs from "dayjs";
-
 import {convert} from 'convert-gitmoji';
-
 import {capitalize, groupBy, join, partition} from '@dylanjs/utils'
+import {VERSION_REG, VERSION_REG_OF_MARKDOWN, VERSION_WITH_RELEASE} from "../constant";
+import type {ChangelogOption, GitCommit, Reference, ResolvedAuthor} from "../types";
+import {createOptions} from "../config";
+import {getFromToTags, getGitCommits, getGitCommitsAndResolvedAuthors, getGitUserAvatar, getUserGithub} from '../git'
+
+
 
 export async function isVersionInMarkdown(version: string, mdPath: string) {
   let isIn = false;
   // 获取CHANGELOG.md里面的内容
-  try {
+  // try {
     const md = await readFile(mdPath, "utf8");
     if (md) {
       // 有没有预发布的版本
@@ -25,9 +25,9 @@ export async function isVersionInMarkdown(version: string, mdPath: string) {
         isIn = matches.includes(versionInMarkdown);
       }
     }
-  } catch (e) {
-    console.log('没有找到CHANGELOG.md文件，稍后将自动创建！')
-  }
+  // } catch () {
+    // console.log('没有找到CHANGELOG.md文件，稍后将自动创建！')
+  // }
   return isIn;
 }
 
@@ -68,7 +68,6 @@ export async function getTotalChangelogMarkdown(
     );
   }
   const tags = getFromToTags(opts.tags);
-  console.log("-> tags", tags);
   if (tags.length === 0) {
     const {markdown} = await getChangelogMarkdown(opts);
     return markdown;
@@ -79,11 +78,9 @@ export async function getTotalChangelogMarkdown(
   for await (const [index, tag] of tags.entries()) {
     const {from, to} = tag;
     const gitCommits = await getGitCommits(from, to);
-    console.log("-> gitCommits", gitCommits);
     const {commits, contributors} = await getGitCommitsAndResolvedAuthors(gitCommits, opts.github, resolvedLogins);
 
     const nextMd = generateMarkdown({commits, options: {...opts, from, to}, showTitle: true, contributors});
-    console.log("-> nextMd", nextMd);
 
     markdown = `${nextMd}\n\n${markdown}`;
 
@@ -156,7 +153,8 @@ export function generateMarkdown(params: {
 }
 
 function formatSection(commits: GitCommit[], sectionName: string, options: ChangelogOption) {
-  if (!commits.length) return [];
+  if (!commits.length) 
+return [];
 
   const lines: string[] = ['', formatTitle(sectionName, options), ''];
 
@@ -203,13 +201,10 @@ function createContributorLine(contributors: ResolvedAuthor[]) {
     const {name, email, login} = contributor;
 
     if (!login) {
-      console.log('进这里了吗？')
       let line = `[${name}](mailto:${email})`;
-
       if (index < contributors.length - 1) {
         line += ',&nbsp;';
       }
-
       unLoginLine += line;
     } else {
       const githubUrl = getUserGithub(login);
@@ -260,11 +255,13 @@ function formatLine(commit: GitCommit, options: ChangelogOption) {
 function formatReferences(references: Reference[], githubRepo: string, type: 'issues' | 'hash'): string {
   const refs = references
     .filter(i => {
-      if (type === 'issues') return i.type === 'issue' || i.type === 'pull-request';
+      if (type === 'issues') 
+return i.type === 'issue' || i.type === 'pull-request';
       return i.type === 'hash';
     })
     .map(ref => {
-      if (!githubRepo) return ref.value;
+      if (!githubRepo) 
+return ref.value;
       if (ref.type === 'pull-request' || ref.type === 'issue')
         return `https://github.com/${githubRepo}/issues/${ref.value.slice(1)}`;
       return `[<samp>(${ref.value.slice(0, 5)})</samp>](https://github.com/${githubRepo}/commit/${ref.value})`;
@@ -272,7 +269,8 @@ function formatReferences(references: Reference[], githubRepo: string, type: 'is
 
   const referencesString = join(refs).trim();
 
-  if (type === 'issues') return referencesString && `in ${referencesString}`;
+  if (type === 'issues') 
+return referencesString && `in ${referencesString}`;
   return referencesString;
 }
 

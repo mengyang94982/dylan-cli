@@ -1,4 +1,4 @@
-import { readFile } from "fs/promises"
+import { readFile } from "node:fs/promises"
 
 
 // 获取当前目录的package.json的version的字段
