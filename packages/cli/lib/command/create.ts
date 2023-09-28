@@ -1,15 +1,18 @@
 import process from "node:process";
 import path from 'node:path';
 import fs from 'node:fs';
+import {fileURLToPath} from 'node:url';
 import prompts from 'prompts'
 import minimist from "minimist";
 
 import type {Answers} from 'prompts';
 
+import {consola} from 'consola';
 
-import {blue, cyan, green, red, reset} from 'kolorist';
 
-import {formatTargetDir, isPathEmpty, isValidPackageName, toValidPackageName} from '@dylanjs/utils';
+import {green, red, reset} from 'kolorist';
+
+import {copy, emptyDir, formatTargetDir, isPathEmpty, isValidPackageName, toValidPackageName} from '@dylanjs/utils';
 
 type TemplateType = 'vue' | 'react' | 'ts-lib'
 
@@ -27,19 +30,25 @@ const templates: Template[] = [
     name: 'Vue 3',
     color: green
   },
-  {
-    type: 'react',
-    name: 'React',
-    color: cyan
-  },
-  {
-    type: 'ts-lib',
-    name: 'TypeScript library',
-    color: blue
-  }
+  // {
+  //   type: 'react',
+  //   name: 'React',
+  //   color: cyan
+  // },
+  // {
+  //   type: 'ts-lib',
+  //   name: 'TypeScript library',
+  //   color: blue
+  // }
 ]
 
 const TEMPLATES = templates.map(t => t.type)
+
+const renameFiles: Record<string, string | undefined> = {
+  _gitignore: '.gitignore',
+  _eslintrc: '.eslintrc',
+  _npmrc: '.npmrc'
+};
 
 interface CliArgs {
   t?: string
@@ -49,7 +58,7 @@ interface CliArgs {
 const defaultTargetDir = 'create-dylan-project';
 
 
-export async function create() {
+export async function create(cwd = process.cwd()) {
   // 获取输入的参数
   const argv = minimist<CliArgs>(process.argv.slice(3), {
     string: ['_']
@@ -88,7 +97,7 @@ export async function create() {
       },
       {
         type: (_, {overwrite}: { overwrite?: boolean }) => {
-          if (!overwrite) {
+          if (overwrite === false) {
             throw new Error(`${red('✖')} Operation cancelled`);
           }
           return null
@@ -108,16 +117,58 @@ export async function create() {
         message: typeof argTemplate === 'string' && !TEMPLATES.includes(argTemplate)
           ? reset(`"${argTemplate}" isn't a valid template. Please choose from below: `) : reset('Select a template:'),
         initial: 0,
-        choices: templates.map((type, name, color) => ({
+        choices: templates.map(({type, name, color}) => ({
           title: color(name),
           value: type
         }))
       }
     ])
-    return result
   } catch (e) {
-
+    consola.error(e);
   }
 
+  if (!result) {
+    return
+  }
 
+  const {template, overwrite, packageName} = result
+
+  const root = path.join(cwd, targetDir)
+
+  if (overwrite) {
+    emptyDir(root)
+  } else if (!fs.existsSync(root)) {
+    fs.mkdirSync(root, {recursive: true})
+  }
+
+  const $template: string = template || argTemplate
+
+  const templateDir = path.resolve(fileURLToPath(import.meta.url), '../../../template', `${$template}`)
+
+  const write = (file: string, content?: string) => {
+    const targetPath = path.join(root, renameFiles[file] ?? file)
+    if (content) {
+      fs.writeFileSync(targetPath, content)
+    } else {
+      copy(path.join(templateDir, file), targetPath)
+    }
+  }
+
+  const files = fs.readdirSync(templateDir)
+  for (const file of files.filter(f => f !== 'package.json')) {
+    write(file)
+  }
+
+  const pkg = JSON.parse(fs.readFileSync(path.join(templateDir, `package.json`), 'utf-8'))
+
+  pkg.name = packageName || getProjectName()
+
+  write(`package.json`, `${JSON.stringify(pkg, null, 2)}\n`)
+
+  const cdProjectName = path.relative(cwd, root)
+  consola.info(`\nDone. Now run:\n`);
+
+  if (root !== cwd) {
+    consola.info(`  cd ${cdProjectName.includes(' ') ? `"${cdProjectName}"` : cdProjectName}`);
+  }
 }
