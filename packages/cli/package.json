@@ -29,12 +29,19 @@
   "dependencies": {
     "@dylanjs/changelog": "workspace:*",
     "@dylanjs/cli": "link:",
+    "@dylanjs/utils": "workspace:*",
     "bumpp": "^9.2.0",
     "c12": "^1.4.2",
     "cac": "^6.7.14",
     "enquirer": "^2.4.1",
     "kolorist": "^1.8.0",
     "lint-staged": "^14.0.1",
+    "minimist": "^1.2.8",
+    "prompts": "^2.4.2",
     "rimraf": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/minimist": "^1.2.3",
+    "@types/prompts": "^2.4.5"
   }
 }

@@ -2,7 +2,7 @@ import type { ChangelogOption } from '@dylanjs/changelog';
 
 export interface CliOption {
   /**
-   * the project root directory
+   * the project root file
    */
   cwd: string
   /**

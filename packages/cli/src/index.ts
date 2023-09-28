@@ -1,5 +1,5 @@
 #!/usr/bin/env node
 
-import {setupCli} from '../lib/index'
+import {setupCli} from '../lib'
 
 setupCli()

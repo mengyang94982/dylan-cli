@@ -1,6 +1,6 @@
 export interface ChangelogOption{
   /**
-   * the directory of the project
+   * the file of the project
    * @default process.cwd()
    */
   cwd:string

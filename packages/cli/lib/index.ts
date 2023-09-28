@@ -5,7 +5,7 @@ import {version} from '../package.json'
 
 import {loadCliOptions} from './config'
 
-import {cleanup,execLintStaged, genChangelog,gitCommit,gitCommitVerify,initSimpleGitHooks,prettierWrite,release,taze} from "./command"
+import {cleanup,create, execLintStaged,genChangelog,gitCommit,gitCommitVerify,initSimpleGitHooks,prettierWrite,release,taze} from "./command"
 
 type Command =
   | 'git-commit'
@@ -17,6 +17,7 @@ type Command =
   | 'taze'
   | 'changelog'
   | 'release'
+  | 'create'
 
 type CommandAction<A extends object> = (args?: A) => Promise<void> | void
 
@@ -43,7 +44,7 @@ export async function setupCli() {
     'init-simple-git-hooks':{
       desc: '初始化 simple-git-hooks 钩子',
       action:async ()=>{
-        await initSimpleGitHooks(cliOptions.cwd)
+        await initSimpleGitHooks()
       }
     },
     'git-commit-verify': {
@@ -91,6 +92,12 @@ export async function setupCli() {
         await release();
       }
     },
+    create:{
+      desc:'通过my create命令创建不同的项目模板',
+      action:async ()=>{
+        await create(cliOptions.cwd)
+      }
+    }
   }
 
   for await (const [command, {desc, action}] of Object.entries(commands)) {
