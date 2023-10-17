@@ -5,12 +5,13 @@
   "scripts": {
     "stub": "pnpm -r run stub",
     "lint": "eslint . --fix",
-    "format": "dy prettier-write",
+    "fm": "dy prettier-write",
     "cm": "dy git-commit",
     "cleanup": "dy cleanup",
     "ncu": "dy taze",
     "typecheck": "tsc --noEmit",
     "build": "pnpm -r run typecheck && pnpm -r run build",
+    "build1": "pnpm -r run build",
     "release": "dy release && pnpm build && pnpm publish-pkg",
     "publish-pkg": "pnpm -r publish --access public",
     "prepare": "dy init-simple-git-hooks"
