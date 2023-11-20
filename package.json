@@ -1,6 +1,6 @@
 {
   "name": "dylan-cli",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "private": true,
   "scripts": {
     "stub": "pnpm -r run stub",

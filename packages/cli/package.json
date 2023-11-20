@@ -1,6 +1,6 @@
 {
   "name": "@dylanjs/cli",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "DylanJS's 的命令行工具",
   "author": "Dylan <my466879168@gmail.com> (https://github.com/mengyang94982/)",
   "license": "MIT",
@@ -29,7 +29,6 @@
   },
   "dependencies": {
     "@dylanjs/changelog": "workspace:*",
-    "@dylanjs/cli": "link:",
     "@dylanjs/utils": "workspace:*",
     "bumpp": "^9.2.0",
     "c12": "^1.4.2",
