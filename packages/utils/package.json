@@ -1,6 +1,6 @@
 {
   "name": "@dylanjs/utils",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "description": "项目中常用的工具方法的工具库",
   "author": "Dylan <my466879168@gmail.com> (https://github.com/mengyang94982/)",
   "license": "MIT",
@@ -21,8 +21,5 @@
     "stub": "unbuild --stub",
     "typecheck": "tsc --noEmit",
     "build": "unbuild"
-  },
-  "devDependencies": {
-    "@dylanjs/cli": "workspace:*"
   }
 }

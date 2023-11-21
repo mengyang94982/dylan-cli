@@ -1,5 +1,5 @@
-import fs from 'node:fs';
-import path from 'node:path';
+import fs from 'node:fs'
+import path from 'node:path'
 
 export function formatTargetDir(targetDir?: string) {
   return targetDir?.trim()?.replace(/\/+$/g, '')
@@ -24,39 +24,39 @@ export function toValidPackageName(projectName: string) {
 }
 
 export function emptyDir(dir: string) {
-  const isExist = fs.existsSync(dir);
+  const isExist = fs.existsSync(dir)
 
   if (!isExist) {
-    return;
+    return
   }
-  const files = fs.readdirSync(dir);
+  const files = fs.readdirSync(dir)
   for (const file of files) {
     if (file !== '.git') {
-      const filePath = path.resolve(dir, file);
-      fs.rmSync(filePath, {recursive: true, force: true});
+      const filePath = path.resolve(dir, file)
+      fs.rmSync(filePath, { recursive: true, force: true })
     }
   }
 }
 
 function copyDir(srcDir: string, destDir: string) {
-  fs.mkdirSync(destDir, {recursive: true});
+  fs.mkdirSync(destDir, { recursive: true })
 
-  const files = fs.readdirSync(srcDir);
+  const files = fs.readdirSync(srcDir)
 
   for (const file of files) {
-    const srcFile = path.resolve(srcDir, file);
-    const destFile = path.resolve(destDir, file);
+    const srcFile = path.resolve(srcDir, file)
+    const destFile = path.resolve(destDir, file)
 
-    copy(srcFile, destFile);
+    copy(srcFile, destFile)
   }
 }
 
 export function copy(src: string, dest: string) {
-  const stat = fs.statSync(src);
+  const stat = fs.statSync(src)
 
   if (stat.isDirectory()) {
-    copyDir(src, dest);
+    copyDir(src, dest)
   } else {
-    fs.copyFileSync(src, dest);
+    fs.copyFileSync(src, dest)
   }
 }

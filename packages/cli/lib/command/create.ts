@@ -1,6 +1,7 @@
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
+
 import process from 'node:process'
 import path from 'node:path'
-import fs from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import prompts from 'prompts'
 import minimist from 'minimist'
@@ -9,9 +10,10 @@ import type { Answers } from 'prompts'
 
 import { consola } from 'consola'
 
-import { green, magenta, red, reset } from 'kolorist'
+import { blue, green, magenta, red, reset } from 'kolorist'
 
-import { copy, emptyDir, formatTargetDir, isPathEmpty, isValidPackageName, toValidPackageName } from '@dylanjs/utils'
+import { copy, emptyDir, formatTargetDir, isValidPackageName, toValidPackageName } from '@dylanjs/utils'
+import { isPathEmpty } from '../shared'
 
 type TemplateType = 'vue' | 'react' | 'ts-lib' | 'node-http'
 
@@ -91,7 +93,8 @@ export async function create(cwd = process.cwd()) {
         }
       },
       {
-        type: () => (!fs.existsSync(targetDir) || isPathEmpty(targetDir) ? null : 'confirm'),
+        // 目录不存在 || 是个空目录 或者是个.git空目录
+        type: () => (!existsSync(targetDir) || isPathEmpty(targetDir) ? null : 'confirm'),
         name: 'overwrite',
         message: () =>
           `${
@@ -142,8 +145,8 @@ export async function create(cwd = process.cwd()) {
 
   if (overwrite) {
     emptyDir(root)
-  } else if (!fs.existsSync(root)) {
-    fs.mkdirSync(root, { recursive: true })
+  } else if (!existsSync(root)) {
+    mkdirSync(root, { recursive: true })
   }
 
   const $template: string = template || argTemplate
@@ -153,20 +156,21 @@ export async function create(cwd = process.cwd()) {
   const write = (file: string, content?: string) => {
     const targetPath = path.join(root, renameFiles[file] ?? file)
     if (content) {
-      fs.writeFileSync(targetPath, content)
+      writeFileSync(targetPath, content)
     } else {
       copy(path.join(templateDir, file), targetPath)
     }
   }
 
-  const files = fs.readdirSync(templateDir)
+  const files = readdirSync(templateDir)
   for (const file of files.filter(f => f !== 'package.json')) {
     write(file)
   }
 
-  const pkg = JSON.parse(fs.readFileSync(path.join(templateDir, `package.json`), 'utf-8'))
+  const pkg = JSON.parse(readFileSync(path.join(templateDir, `package.json`), 'utf-8'))
 
   pkg.name = packageName || getProjectName()
+  pkg.version = `1.0.0`
 
   write(`package.json`, `${JSON.stringify(pkg, null, 2)}\n`)
 
@@ -174,6 +178,8 @@ export async function create(cwd = process.cwd()) {
   consola.info(`\nDone. Now run:\n`)
 
   if (root !== cwd) {
-    consola.info(`  cd ${cdProjectName.includes(' ') ? `"${cdProjectName}"` : cdProjectName}`)
+    consola.info(blue(`  cd ${cdProjectName.includes(' ') ? `"${cdProjectName}"` : cdProjectName}`))
+    consola.info(blue(`  pnpm install`))
+    consola.info(blue(`  pnpm run dev`))
   }
 }

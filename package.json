@@ -1,6 +1,6 @@
 {
   "name": "dylan-cli",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "private": true,
   "scripts": {
     "stub": "pnpm -r run stub",
@@ -11,7 +11,6 @@
     "ncu": "dy taze",
     "typecheck": "tsc --noEmit",
     "build": "pnpm -r run typecheck && pnpm -r run build",
-    "build1": "pnpm -r run build",
     "release": "dy release && pnpm build && pnpm publish-pkg",
     "publish-pkg": "pnpm -r publish --access public",
     "prepare": "dy init-simple-git-hooks"
