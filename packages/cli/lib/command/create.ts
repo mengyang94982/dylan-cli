@@ -10,12 +10,12 @@ import type { Answers } from 'prompts'
 
 import { consola } from 'consola'
 
-import { blue, green, magenta, red, reset } from 'kolorist'
+import { blue, cyan, green, magenta, red, reset } from 'kolorist'
 
 import { copy, emptyDir, formatTargetDir, isValidPackageName, toValidPackageName } from '@dylanjs/utils'
 import { isPathEmpty } from '../shared'
 
-type TemplateType = 'vue' | 'react' | 'ts-lib' | 'node-http'
+type TemplateType = 'vue' | 'react' | 'ts-lib' | 'node-http' | 'uni-app-template'
 
 type ColorFunc = (str: string | number) => string
 
@@ -35,12 +35,12 @@ const templates: Template[] = [
     type: 'node-http',
     name: 'node-http项目',
     color: magenta
+  },
+  {
+    type: 'uni-app-template',
+    name: 'uni-app',
+    color: cyan
   }
-  // {
-  //   type: 'react',
-  //   name: 'React',
-  //   color: cyan
-  // },
   // {
   //   type: 'ts-lib',
   //   name: 'TypeScript library',
@@ -151,7 +151,7 @@ export async function create(cwd = process.cwd()) {
 
   const $template: string = template || argTemplate
 
-  const templateDir = path.resolve(fileURLToPath(import.meta.url), '../../../template', `${$template}`)
+  const templateDir = path.resolve(fileURLToPath(import.meta.url), '../template', `${$template}`)
 
   const write = (file: string, content?: string) => {
     const targetPath = path.join(root, renameFiles[file] ?? file)

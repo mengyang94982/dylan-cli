@@ -4,9 +4,8 @@
   "private": true,
   "scripts": {
     "stub": "pnpm -r run stub",
-    "lint": "eslint . --fix",
-    "fm": "dy prettier-write",
-    "cm": "dy git-commit",
+    "lint": "dy prettier-write && eslint . --fix",
+    "cm": "git add . && dy git-commit",
     "cleanup": "dy cleanup",
     "ncu": "dy taze",
     "typecheck": "tsc --noEmit",
