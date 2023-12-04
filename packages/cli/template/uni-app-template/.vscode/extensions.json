@@ -1,0 +1,21 @@
+{
+  /*
+    推荐扩展。
+    一键安装方式：
+      1.点击左侧的扩展图标
+      2. 点击筛选扩展器图标
+      3.点击工作区推荐右侧的下载图标一键安装
+  */
+  "recommendations": [
+    "antfu.vite",
+    "antfu.iconify",
+    "antfu.unocss",
+    "vue.volar",
+    "dbaeumer.vscode-eslint",
+    "editorconfig.editorconfig",
+    "uni-helper.uni-highlight-vscode",
+    "uni-helper.uni-app-snippets-vscode",
+    "uni-helper.uni-ui-snippets-vscode",
+    "uni-helper.uni-app-schemas-vscode"
+  ]
+}
