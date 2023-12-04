@@ -151,7 +151,7 @@ export async function create(cwd = process.cwd()) {
 
   const $template: string = template || argTemplate
 
-  const templateDir = path.resolve(fileURLToPath(import.meta.url), '../template', `${$template}`)
+  const templateDir = path.resolve(fileURLToPath(import.meta.url), '../../template', `${$template}`)
 
   const write = (file: string, content?: string) => {
     const targetPath = path.join(root, renameFiles[file] ?? file)
