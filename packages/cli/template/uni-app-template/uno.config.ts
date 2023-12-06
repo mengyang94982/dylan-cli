@@ -1,5 +1,4 @@
-import process from 'node:process';
-import type { Preset, SourceCodeTransformer } from 'unocss';
+import type { Preset, SourceCodeTransformer } from 'unocss'
 
 /*
   unocss预设：
@@ -11,6 +10,7 @@ import type { Preset, SourceCodeTransformer } from 'unocss';
     - transformerDirectives
     - transformerVariantGroup 组合，方便书写
 */
+
 import {
   defineConfig,
   presetAttributify,
@@ -18,44 +18,38 @@ import {
   presetUno,
   transformerDirectives,
   transformerVariantGroup,
-} from 'unocss';
+} from 'unocss'
 
 // 把默认rem单位改为px单位，在通过postcss-pxtorem进行rem转换
-import presetRemToPx from '@unocss/preset-rem-to-px';
-
-// 生成class
-// import transformerCompileClass from '@unocss/transformer-compile-class'
-// 加载本地svg图标
-// import { FileSystemIconLoader } from '@iconify/utils/lib/loader/node-loaders'
+import presetRemToPx from '@unocss/preset-rem-to-px'
 
 /* unocss 小程序兼容预设： https://github.com/unocss-applet/unocss-applet/blob/main/README.zh-CN.md */
-import { presetApplet, presetRemRpx, transformerApplet, transformerAttributify } from 'unocss-applet';
+import {
+  presetApplet,
+  presetRemRpx,
+  transformerApplet,
+  transformerAttributify,
+} from 'unocss-applet'
 
 // uni-app
-const isApplet = process.env?.UNI_PLATFORM?.startsWith('mp-') ?? false;
-console.log('isApplet', isApplet);
-const presets: Preset[] = [];
-const transformers: SourceCodeTransformer[] = [];
+const isApplet = process.env?.UNI_PLATFORM?.startsWith('mp-') ?? false
+const presets: Preset[] = []
+const transformers: SourceCodeTransformer[] = []
 
 if (isApplet) {
-  presets.push(presetApplet());
-  presets.push(presetRemRpx({ baseFontSize: 4 })); // 默认16(1rem=16px)，改为4以后，1rem=1px，方便移动端直接使用px单位
-  transformers.push(transformerAttributify({ ignoreAttributes: ['block'] }));
-  transformers.push(transformerApplet());
+  presets.push(presetApplet())
+  presets.push(presetRemRpx({ baseFontSize: 4 })) // 默认16(1rem=16px)，改为4以后，1rem=1px，方便移动端直接使用px单位
+  transformers.push(transformerAttributify({ ignoreAttributes: ['block'] }))
+  transformers.push(transformerApplet())
 }
 else {
-  presets.push(presetUno());
-  presets.push(presetAttributify());
+  presets.push(presetUno())
+  presets.push(presetAttributify())
   // presets.push(presetRemRpx({ baseFontSize: 4, mode: 'rpx2rem', enable: false }));
-  presets.push(presetRemToPx({ baseFontSize: 4 }));
+  presets.push(presetRemToPx({ baseFontSize: 4 }))
 }
 
 export default defineConfig({
-  // 预设的别名，可以进行一些组合使用
-  shortcuts: [
-    ['center', 'flex items-center justify-center'],
-    ['primary-color', 'text-teal-600'],
-  ],
   presets: [
     presetIcons({
       scale: 1.2,
@@ -67,6 +61,10 @@ export default defineConfig({
     }),
     ...presets,
   ],
+  shortcuts: {
+    'wh-full': 'w-full h-full',
+    'flex-center': 'flex justify-center items-center',
+  },
   transformers: [
     // 指令：@apply等
     transformerDirectives(),
@@ -74,4 +72,4 @@ export default defineConfig({
     ...transformers,
   ],
   rules: [],
-});
+})

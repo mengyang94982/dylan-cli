@@ -1,16 +1,9 @@
 <template>
-  <view>我的
-    scr
+  <view class="text-20px">
+    <view> 我的页面 </view>
   </view>
-
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts"></script>
 
-</script>
-
-
-
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss"></style>
